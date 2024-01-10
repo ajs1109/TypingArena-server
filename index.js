@@ -16,7 +16,7 @@ app.use(bodyParser.urlencoded({ extended:true,limit:'300mb' }));
 // app.use(express.json())
 app.use(cors(
     {
-        origin: ["*"],
+        origin: ["https://typing-arena-client.vercel.app"],
         methods: ["POST", "GET"],
         credentials: true
     }
