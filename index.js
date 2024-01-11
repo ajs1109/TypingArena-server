@@ -10,7 +10,13 @@ const app = express();
 app.use(bodyParser.json({ limit: "300mb", extended: true }));
 app.use(bodyParser.urlencoded({ extended: true, limit: "300mb" }));
 // app.use(express.json())
-app.use(cors());
+app.use(
+   cors({
+    origin: ["https://typing-arena-client.vercel.app"],
+    methods: ["POST", "GET"],
+    credentials: true,
+  })
+);
 
 const PORT = process.env.port || 6010;
 const CONNECTION_URL =
