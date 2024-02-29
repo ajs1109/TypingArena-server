@@ -38,6 +38,7 @@ mongoose
         origin: "https://typing-arena-client.vercel.app",
         methods: ["GET", "POST"],
       },
+      allowEIO3: true,
     });
     io.on("connection", (socket) => {
       console.log(`${socket.id} connected`)
