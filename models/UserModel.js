@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 import Joi from "joi";
-import PassComp from 'joi-password-complexity';
+// import PassComp from 'joi-password-complexity';
 
 const userModel = new mongoose.Schema(
   {
@@ -36,7 +36,7 @@ export const validate = (data) => {
     name: Joi.string().required().label("Name"),
     email: Joi.string().required().label("Email"),
     password: PassComp().required().label("Password"),
-    // confirmPassword: PassComp().required().label("Confirm Password"),
+    confirmPassword: PassComp().required().label("Confirm Password"),
   })
 
 return schema.validate(data)

@@ -5,6 +5,7 @@ import "dotenv/config";
 import mongoose from "mongoose";
 import userRoutes from "./router/users.js";
 import authRoutes from "./router/auth.js";
+import { Server } from "socket.io";
 
 const app = express();
 app.use(bodyParser.json({ limit: "300mb", extended: true }));
@@ -25,5 +26,37 @@ mongoose
     const server = app.listen(PORT, () =>
       console.log("Server is listening on port", PORT)
     );
+    const io = new Server(server, {
+      pingTimeout: 60000,
+      cors: {
+        origin: "http://localhost:5173",
+        methods: ["GET", "POST"],
+      },
+    });
+    io.on("connection", (socket) => {
+      console.log(`${socket.id} connected`)
+      socket.on('joined-room',({id,room}) => {
+        socket.join(room);
+        console.log(`${id} joined ${room} yo`);
+        console.log('create room size ' + io.sockets.adapter.rooms.get(room).size)
+         })
+      socket.on('check-room',({id,room}) => {
+        socket.join(room);
+        console.log('check room '+io.sockets.adapter.rooms.get(room).size)
+        if(io.sockets.adapter.rooms.get(room).size <= 1){
+          socket.leave(room);
+          socket.emit('is-right-room',{success:false,message:'invalid room id'})
+        }
+        else{
+          socket.emit('is-right-room',{success:true,message:'welcome'})
+        }
+     
+      })
+      socket.on('leave-room',room => {
+        socket.leave(room);
+      })
+    });
+
+    // io.on("disconnection",(socket) => {console.log('socket.io disconnected')});
   })
   .catch((err) => console.log("Error connecting to port"));
